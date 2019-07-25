@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 25, 2019 at 08:11 AM
+-- Generation Time: Jul 25, 2019 at 08:17 AM
 -- Server version: 10.1.36-MariaDB
 -- PHP Version: 7.2.11
 
@@ -21,6 +21,58 @@ SET time_zone = "+00:00";
 --
 -- Database: `keanggotaan`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `login`
+--
+
+CREATE TABLE `login` (
+  `nik` int(16) NOT NULL,
+  `password` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `mapping_pengguna`
+--
+
+CREATE TABLE `mapping_pengguna` (
+  `nik` int(16) NOT NULL,
+  `id_posisi` int(16) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pengguna`
+--
+
+CREATE TABLE `pengguna` (
+  `nik` int(11) NOT NULL,
+  `nama` varchar(40) NOT NULL,
+  `ttl` date NOT NULL,
+  `alamat` text NOT NULL,
+  `provinsi` varchar(30) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `status` enum('0','1') NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `portofolio`
+--
+
+CREATE TABLE `portofolio` (
+  `NIK` int(11) NOT NULL,
+  `Bidang_Keahlian` varchar(100) NOT NULL,
+  `Riwayat_Keahlian` varchar(100) NOT NULL,
+  `Sertifikat_Dimiliki` text NOT NULL,
+  `Riwayat_Project` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -48,6 +100,31 @@ INSERT INTO `posisi` (`id_posisi`, `nama_posisi`) VALUES
 --
 
 --
+-- Indexes for table `login`
+--
+ALTER TABLE `login`
+  ADD PRIMARY KEY (`nik`);
+
+--
+-- Indexes for table `mapping_pengguna`
+--
+ALTER TABLE `mapping_pengguna`
+  ADD KEY `mapping_nik` (`nik`),
+  ADD KEY `mapping_posisi` (`id_posisi`);
+
+--
+-- Indexes for table `pengguna`
+--
+ALTER TABLE `pengguna`
+  ADD PRIMARY KEY (`nik`);
+
+--
+-- Indexes for table `portofolio`
+--
+ALTER TABLE `portofolio`
+  ADD UNIQUE KEY `porto_nik` (`NIK`);
+
+--
 -- Indexes for table `posisi`
 --
 ALTER TABLE `posisi`
@@ -62,6 +139,35 @@ ALTER TABLE `posisi`
 --
 ALTER TABLE `posisi`
   MODIFY `id_posisi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `login`
+--
+ALTER TABLE `login`
+  ADD CONSTRAINT `login_ibfk_1` FOREIGN KEY (`nik`) REFERENCES `pengguna` (`nik`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `mapping_pengguna`
+--
+ALTER TABLE `mapping_pengguna`
+  ADD CONSTRAINT `mapping_pengguna_ibfk_1` FOREIGN KEY (`nik`) REFERENCES `pengguna` (`nik`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `mapping_pengguna_ibfk_2` FOREIGN KEY (`id_posisi`) REFERENCES `posisi` (`id_posisi`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `pengguna`
+--
+ALTER TABLE `pengguna`
+  ADD CONSTRAINT `pengguna_ibfk_1` FOREIGN KEY (`nik`) REFERENCES `login` (`nik`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `portofolio`
+--
+ALTER TABLE `portofolio`
+  ADD CONSTRAINT `portofolio_ibfk_1` FOREIGN KEY (`NIK`) REFERENCES `pengguna` (`nik`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
